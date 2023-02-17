@@ -1,0 +1,23 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello ReclamationController!{% endblock %}
+
+{% block body %}
+    <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
+        <div class="card-body">
+            <div class="billing-address-form">
+
+                {{ form_start(form,{'attr': {'novalidate': 'novalidate'}}) }}
+
+                {{ include('reclamation/_form.html.twig') }}
+                <!-- <button type="submit" class="btn btn-success">Submit</button>
+                <button class="btn btn-dark">Cancel</button>-->
+                <input type="submit" value="Ajouter" style="float: right;">
+
+
+                {{ form_rest(form) }}
+                {{ form_end(form) }}
+            </div>
+        </div>
+    </div>
+{% endblock %}
