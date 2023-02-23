@@ -6,6 +6,7 @@ use App\Repository\ReclamationRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=ReclamationRepository::class)
@@ -21,11 +22,26 @@ class Reclamation
 
     /**
      * @ORM\Column(type="string", length=255)
+     *
+     * @Assert\NotBlank(message="lObjet est necessaire")
+     * @Assert\Length(
+     *      min = 4,
+     *      max = 30,
+     *      minMessage = "LObjet doit contenir au moins {{ limit }} characteres",
+     *      maxMessage = "LObjet  doit contenir au plus {{ limit }} characteres"
+     * )
      */
     private $objet;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank(message="le contenu est necessaire")
+     * @Assert\Length(
+     *      min = 10,
+     *      max = 250,
+     *      minMessage = "Le contenu doit contenir au moins {{ limit }} characteres",
+     *      maxMessage = "Le contenu doit contenir au plus {{ limit }} characteres"
+     * )
      */
     private $contenu;
 
