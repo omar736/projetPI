@@ -24,23 +24,24 @@
                     <form id="contact" action="" method="post">
 
                         {% for message in messages %}
-                            <div style="color:white;">
+                            <div>
                                 {% if message.senderId.id == userId %}
 
                                     You:
                                     <div class="btn btn-primary">
                                         {{ message.message }}
                                     </div>
+                                    <a href="{{ path('message_delete', {"id": message.id}) }}"><i>x</i></a>
                                     <br>
                                 {% else %}
-                                    <div style="float: right;color:white;">
-
+                                    <div style="float: right">
                                         {{ message.senderId.userName }}
-                                        <div class="btn btn-danger" >
+                                        <div class="btn btn-info" >
                                             <div class="col-lg-9">
                                                 <fieldset>
                                             {{ message.message }}
                                                 </fieldset>
+
                                             </div>
                                         </div>
                                     </div>

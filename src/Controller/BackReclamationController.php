@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Reclamation;
 use App\Repository\ReclamationRepository;
+use CMEN\GoogleChartsBundle\GoogleCharts\Charts\PieChart;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -16,11 +17,38 @@ class BackReclamationController extends AbstractController
      */
     public function index(ReclamationRepository $reclamationRepository): Response
     {
+    $reclamations=$reclamationRepository->findAll();
+        $r1=0;
+        $r2=0;
+        foreach ($reclamations as $reclamation)
+        {
+            if ( $reclamation->getEtat()==0)  :
+                $r1+=1;
+            else:
+                $r2+=1;
+            endif;
+        }
+        $pieChart = new PieChart();
+        $pieChart->getData()->setArrayToDataTable(
+            [['etat', 'nombre'],
+                ['Non traité', $r1],
+                ['Traité', $r2],
+
+            ]
+        );
+        $pieChart->getOptions()->setHeight(500);
+        $pieChart->getOptions()->setWidth(900);
+        $pieChart->getOptions()->setBackgroundColor('#191c24');
+        $pieChart->getOptions()->getLegend()->getTextStyle()->setColor('#FFFFFF');
+        $pieChart->getOptions()->getLegend()->setPosition('bottom');
+
+
+
 
 
         return $this->render('back_reclamation/index.html.twig', [
             'controller_name' => 'BackReclamationController',
-            "reclamations"=>$reclamationRepository->findAll(),
+            "reclamations"=>$reclamationRepository->findAll(),'piechart' => $pieChart
         ]);
     }
 
