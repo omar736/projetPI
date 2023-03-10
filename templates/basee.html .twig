@@ -6,7 +6,6 @@
         <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text></svg>">
         {# Run `composer require symfony/webpack-encore-bundle` to start using Symfony UX #}
         {% block stylesheets %}
-            <link rel="stylesheet" href="{{ asset("bundles/mercuryseriesflashy/css/flashy.css") }}">
             <link rel="stylesheet" type="text/css" href="{{ asset("template/vendor/fontawesome-free/css/all.min.css") }}">
             <link
                     href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
@@ -23,13 +22,16 @@
             <script src="{{ asset("template/vendor/bootstrap/js/bootstrap.bundle.min.js") }}"></script>
             <script src="{{ asset("template/vendor/jquery-easing/jquery.easing.min.js") }}"></script>
             <script src="{{ asset("template/js/sb-admin-2.min.js") }}"></script>
-            <script src="{{ asset("bundles/mercuryseriesflashy/js/flashy.js") }}"></script>
+
         {% endblock %}
     </head>
     <body id="page-top">
+    
+    
     <div id="wrapper">
 
         <!-- Sidebar -->
+        
         <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
             <!-- Sidebar - Brand -->
@@ -155,26 +157,92 @@
             <div id="content">
 
                 <!-- Topbar -->
-                <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+                <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="/">BABYJOY</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-purple">
+<nav class="navbar navbar-expand-lg navbar-dark navbar-purple">
 
-                    <!-- Sidebar Toggle (Topbar) -->
-                    <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
-                        <i class="fa fa-bars"></i>
-                    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav">
+        {% if is_granted('ROLE_ADMIN') %}    
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              {{ app.user.email }}
+            </a>
 
-                    <!-- Topbar Search -->
-                    <form
-                            class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
-                        <div class="input-group">
-                            <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..."
-                                   aria-label="Search" aria-describedby="basic-addon2">
-                            <div class="input-group-append">
-                                <button class="btn btn-primary" type="button">
-                                    <i class="fas fa-search fa-sm"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </form>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+              <a class="dropdown-item" href="/profile">Modifier profil</a>
+              <a class="dropdown-item" href="/quizz/history/{{ app.user.id }}">Historique des quizz</a>
+            </div>
+          </li>
+          
+           <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              Admin
+            </a>
+
+            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+              <a class="dropdown-item" href="/admin/user/">Utilisateurs</a>
+              <a class="dropdown-item" href="/admin/categorie/">Catégories</a>
+              <a class="dropdown-item" href="/admin/question/">Questions</a>
+              <a class="dropdown-item" href="/admin/reponse/">Réponses</a>
+              <a class="dropdown-item" href="/admin/quizz/history">Historique des quizz</a>
+            </div>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{{ path('app_logout') }}">Déconnexion</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/quizz">Quizz</a>
+          </li>
+        {% elseif app.user %}
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              {{ app.user.email }}
+            </a>
+
+            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+              <a class="dropdown-item" href="/profile">Modifier profil</a>
+              <a class="dropdown-item" href="/quizz/history/{{ app.user.id }}">Historique des quizz</a>
+            </div>
+          </li>
+
+          <li class="nav-item">
+            <a class="nav-link" href="{{ path('app_logout') }}">Déconnexion</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/quizz">Quizz</a>
+          </li>
+        {% else %}
+        <li class="nav-item">
+          <a class="nav-link" href="/register">Inscription</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/login">Connexion</a>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Quizz
+          </a>
+
+          <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+            <a class="dropdown-item" href="/quizz">Quizz</a>
+            <a class="dropdown-item" href="/quizz/session/history">Historique</a>
+          </div>
+        </li>
+        {% endif %}
+      </ul>
+    </div>
+  </div>
+</nav>
+                
+
+                    
+                    
 
                     <!-- Topbar Navbar -->
                     <ul class="navbar-nav ml-auto">
@@ -203,14 +271,7 @@
                             </div>
                         </li>
 
-                        <!-- Nav Item - Alerts -->
-                        <li class="nav-item dropdown no-arrow mx-1">
-                            <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button"
-                               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <i class="fas fa-bell fa-fw"></i>
-                                <!-- Counter - Alerts -->
-                                <span class="badge badge-danger badge-counter">3+</span>
-                            </a>
+                         
                             <!-- Dropdown - Alerts -->
                             <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
                                  aria-labelledby="alertsDropdown">
@@ -254,14 +315,7 @@
                             </div>
                         </li>
 
-                        <!-- Nav Item - Messages -->
-                        <li class="nav-item dropdown no-arrow mx-1">
-                            <a class="nav-link dropdown-toggle" href="#" id="messagesDropdown" role="button"
-                               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <i class="fas fa-envelope fa-fw"></i>
-                                <!-- Counter - Messages -->
-                                <span class="badge badge-danger badge-counter">7</span>
-                            </a>
+                         
                             <!-- Dropdown - Messages -->
                             <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
                                  aria-labelledby="messagesDropdown">
@@ -322,14 +376,7 @@
 
                         <div class="topbar-divider d-none d-sm-block"></div>
 
-                        <!-- Nav Item - User Information -->
-                        <li class="nav-item dropdown no-arrow">
-                            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
-                               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">Douglas McGee</span>
-                                <img class="img-profile rounded-circle"
-                                     src="img/undraw_profile.svg">
-                            </a>
+                         
                             <!-- Dropdown - User Information -->
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
                                  aria-labelledby="userDropdown">
@@ -357,9 +404,8 @@
 
                 </nav>
                 <!-- End of Topbar -->
-{{ include('@MercurySeriesFlashy/flashy.html.twig') }}
-                {% block body %}
-                {% endblock %}
+
+                {% block body %}{% endblock %}
         <footer class="sticky-footer bg-white">
             <div class="container my-auto">
                 <div class="copyright text-center my-auto">

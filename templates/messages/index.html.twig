@@ -10,6 +10,13 @@
                 <div class="col-lg-12">
                     <h6>Discussion</h6>
                     <h2>{{ OtherUser.userName }}</h2>
+                    <div >
+                        <div >
+                            <div >
+                                <img src="{{ qr_code_url(myurl) }}" alt="myqr" style=" height: 100px;width: 100px" >
+                            </div>
+                        </div>
+                    </div>
 
                 </div>
             </div>
@@ -31,7 +38,7 @@
                                     <div class="btn btn-primary">
                                         {{ message.message }}
                                     </div>
-                                    <a href="{{ path('message_delete', {"id": message.id}) }}"><i>x</i></a>
+                                    <a href="{{ path('message_delete', {"id": message.id,"idPath":message.recipientId.id}) }}"><i>x</i></a>
                                     <br>
                                 {% else %}
                                     <div style="float: right">

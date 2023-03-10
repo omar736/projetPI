@@ -53,6 +53,18 @@ class ReclamationRepository extends ServiceEntityRepository
 //            ->getResult()
 //        ;
 //    }
+    public function findByString($search)
+    {
+        return $this->createQueryBuilder('r')
+            ->join('r.user', 'u')
+            ->where('r.contenu LIKE :search')
+            ->orWhere('u.email LIKE :search')
+            ->orWhere('r.id LIKE :search')
+            ->orWhere('r.objet LIKE :search')
+            ->setParameter('search', '%'.$search.'%')
+            ->getQuery()
+            ->getResult();
+    }
 
 //    public function findOneBySomeField($value): ?Reclamation
 //    {

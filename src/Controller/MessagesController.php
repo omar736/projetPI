@@ -7,11 +7,13 @@ use App\Entity\Reclamation;
 use App\Entity\User;
 use App\Form\MessageType;
 use App\Repository\MessagesRepository;
+use MercurySeries\FlashyBundle\FlashyNotifier;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 class MessagesController extends AbstractController
 {
@@ -27,11 +29,16 @@ class MessagesController extends AbstractController
     /**
      * @Route("/messages/{id}", name="app_messages")
      */
-    public function discussion(int $id,MessagesRepository $messagesRepository,Request $request): Response
+    public function discussion(int $id,MessagesRepository $messagesRepository,Request $request,UserInterface $user): Response
     {
         $NewMessage=New Messages();
-        $user1 = $this->getDoctrine()->getRepository(User::class)->find(1);
+        $username=$user->getPassword();
+        $em=$this->getDoctrine()->getManager();
+        $user1 = $em->getRepository(User::class)->findOneBy(["password"=>$username]);
+
+        //$user1 = $this->getDoctrine()->getRepository(User::class)->find(1);
         $user2 = $this->getDoctrine()->getRepository(User::class)->find($id);
+        $url = 'https://www.babyjoey.tn/profile/'.$id;
         $form = $this->createForm(MessageType::class,$NewMessage);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
@@ -48,20 +55,24 @@ class MessagesController extends AbstractController
             "messages" => $messagesRepository->findBySenderAndRecipient($user1,$user2),
             "ConnectedUser"=>$user1,
             "OtherUser"=>$user2,
-            "userId" =>1,
-            'form' => $form->createView()
+            "userId" =>$user1->getId(),
+            'form' => $form->createView(),
+            "myurl"=>$url
         ]);
     }
     /**
-     * @Route("message/{id}/delete", name="message_delete")
+     * @Route("message/{id}/{idPath}/delete", name="message_delete")
      * @param Messages $messages
      * @return RedirectResponse
      */
-    public function delete (Messages $messages): RedirectResponse
+    public function delete (Messages $messages,int $idPath,FlashyNotifier $flashyNotifier): RedirectResponse
     {
         $em = $this->getDoctrine()->getManager();
+
         $em->remove($messages);
         $em->flush();
-        return $this->redirectToRoute("/messages");
+        $flashyNotifier->message("votre message a été supprimé avec succées");
+        return $this->redirect("/messages/".$idPath);
+
     }
 }
